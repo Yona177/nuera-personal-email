@@ -15,6 +15,10 @@ import MeditationPlayer from '@/screens/meditation/MeditationPlayer';
 import MeditationComplete from '@/screens/meditation/MeditationComplete';
 import GratitudeNew from "@/screens/gratitude/GratitudeNew";
 import GratitudeHistory from "@/screens/gratitude/GratitudeHistory";
+// new imports oct 4th 25
+import { hasConsent } from "@/utils/consent";
+import FirstRunConsent from "@/components/modals/FirstRunConsent";
+
 
 // 👇 NEW: import the breathing player
 import BreathingPlayer from '@/screens/breathing/BreathingPlayer';
