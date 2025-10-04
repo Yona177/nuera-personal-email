@@ -18,6 +18,7 @@ import GratitudeHistory from "@/screens/gratitude/GratitudeHistory";
 // new imports oct 4th 25
 import { hasConsent } from "@/utils/consent";
 import FirstRunConsent from "@/components/modals/FirstRunConsent";
+import DebugStatus from '@/screens/DebugStatus';
 
 
 // 👇 NEW: import the breathing player
