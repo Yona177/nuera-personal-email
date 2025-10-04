@@ -72,6 +72,7 @@ const AppContent = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/gratitude/new" element={<GratitudeNew />} />
         <Route path="/gratitude/history" element={<GratitudeHistory />} />
+        <Route path="/debug" element={<DebugStatus />} />
 
         {/* Meditation routes */}
         <Route path="/meditation/:meditationId" element={<MeditationPlayer />} />
