@@ -40,7 +40,7 @@ const AppContent = () => {
   // Hide bottom nav on full-screen flows (meditation + breathing)
   const hideNavigation =
     location.pathname.startsWith('/meditation/') ||
-    location.pathname.startsWith('/breathing/'); ||
+    location.pathname.startsWith('/breathing/') ||
     location.pathname.startsWith('/gratitude/');
 
   if (appState === 'splash') {
