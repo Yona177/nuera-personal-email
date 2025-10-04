@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react"; // 👈 added useEffect
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,11 @@ export default function GratitudeNew() {
   const current = items[step] || null;
   const progress = useMemo(() => Math.min(3, step + 1), [step]);
 
+  // 🔹 Fire when user starts this flow
+  useEffect(() => {
+    track("gratitude_start", { source: "gratitude_reflection" });
+  }, []);
+
   const setCurrent = (patch: Partial<GratitudeItem>) => {
     setItems(prev => prev.map((it, i) => i === step ? { ...it, ...patch } : it));
   };
@@ -33,11 +38,27 @@ export default function GratitudeNew() {
     // require at least 'what' for steps 0..2
     if (step <= 2) {
       if (!current?.what?.trim()) return;
-      if (step < 2) { setStep(step + 1); return; }
-      setStep(3);  // savor
+
+      // 🔹 Log each completed item (idx 0..2)
+      track("gratitude_item_added", {
+        idx: step,
+        category: current?.category || null,
+        hasWhy: !!current?.why,
+      });
+
+      if (step < 2) { 
+        setStep(step + 1); 
+        return; 
+      }
+      // moving into savor
+      setStep(3);  
+      track("gratitude_savor_start");
       return;
     }
-    if (step === 3) { setStep(4); return; } // done
+    if (step === 3) { 
+      setStep(4); 
+      return; 
+    } // done step
     if (step === 4) finish();
   };
 
