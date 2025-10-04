@@ -33,6 +33,10 @@ const AppContent = () => {
   const [appState, setAppState] = useState<AppState>('splash');
   const navigate = useNavigate();
   const location = useLocation();
+  // 👇 Allow /debug to render without consent/splash flows
+if (location.pathname === '/debug') {
+  return <DebugStatus />;
+}
   const [consentAccepted, setConsentAccepted] = useState<boolean>(hasConsent());
   if (!consentAccepted) {
   return <FirstRunConsent onAccepted={() => setConsentAccepted(true)} />;
