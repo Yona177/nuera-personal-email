@@ -19,6 +19,7 @@ import GratitudeHistory from "@/screens/gratitude/GratitudeHistory";
 import { hasConsent } from "@/utils/consent";
 import FirstRunConsent from "@/components/modals/FirstRunConsent";
 import DebugStatus from '@/screens/DebugStatus';
+import DebugStatus from '@/screens/DebugStatus';
 
 
 // 👇 NEW: import the breathing player
