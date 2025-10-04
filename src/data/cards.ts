@@ -57,5 +57,13 @@ export const SEED_CARDS: Card[] = [
     content: "I'm here to listen and support you. What's on your mind today? Share your thoughts and feelings in a safe space.",
     duration: "Open",
     action: { kind: "open_companion" }
-  }
+  },
+  {
+  id: "card_gratitude",
+  type: "perspective",
+  title: "Gratitude Reflection",
+  content: "What are 3 things you’re grateful for today?",
+  duration: "1–2 min",
+  action: { kind: "open_gratitude" }
+}
 ];
