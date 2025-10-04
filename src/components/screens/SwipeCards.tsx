@@ -37,6 +37,9 @@ const SwipeCards = () => {
             case 'open_breath':           // legacy support
               navigate(`/breathing/${a.patternId}`);
               break;
+            case 'open_gratitude':
+              navigate('/gratitude/new');
+              break;
             case 'open_cbt':
               // navigate(`/cbt/${a.tipId}`);
               break;
