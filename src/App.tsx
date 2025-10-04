@@ -13,6 +13,8 @@ import Profile from '@/components/screens/Profile';
 import Navigation from '@/components/layout/Navigation';
 import MeditationPlayer from '@/screens/meditation/MeditationPlayer';
 import MeditationComplete from '@/screens/meditation/MeditationComplete';
+import GratitudeNew from "@/screens/gratitude/GratitudeNew";
+import GratitudeHistory from "@/screens/gratitude/GratitudeHistory";
 
 // 👇 NEW: import the breathing player
 import BreathingPlayer from '@/screens/breathing/BreathingPlayer';
@@ -38,7 +40,8 @@ const AppContent = () => {
   // Hide bottom nav on full-screen flows (meditation + breathing)
   const hideNavigation =
     location.pathname.startsWith('/meditation/') ||
-    location.pathname.startsWith('/breathing/');
+    location.pathname.startsWith('/breathing/'); ||
+    location.pathname.startsWith('/gratitude/');
 
   if (appState === 'splash') {
     return <SplashScreen onComplete={handleSplashComplete} />;
@@ -56,6 +59,8 @@ const AppContent = () => {
         <Route path="/reels" element={<ReelsFeed />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/gratitude/new" element={<GratitudeNew />} />
+        <Route path="/gratitude/history" element={<GratitudeHistory />} />
 
         {/* Meditation routes */}
         <Route path="/meditation/:meditationId" element={<MeditationPlayer />} />
