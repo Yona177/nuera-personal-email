@@ -31,6 +31,12 @@ const AppContent = () => {
   const [appState, setAppState] = useState<AppState>('splash');
   const navigate = useNavigate();
   const location = useLocation();
+  const [consentAccepted, setConsentAccepted] = useState<boolean>(hasConsent());
+  if (!consentAccepted) {
+  return <FirstRunConsent onAccepted={() => setConsentAccepted(true)} />;
+}
+
+
 
   const handleSplashComplete = () => {
     setAppState('mood-check');
