@@ -18,6 +18,7 @@ export type CardAction =
   | { kind: "open_cbt"; tipId: string }
   | { kind: "open_companion" }
   | { kind: "open_sleep"; routineId: string }
+  | { kind: "open_gratitude" }
   | { kind: "none" };
 
 export type Card = {
