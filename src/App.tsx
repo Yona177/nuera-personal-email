@@ -18,11 +18,8 @@ import GratitudeHistory from "@/screens/gratitude/GratitudeHistory";
 // new imports oct 4th 25
 import { hasConsent } from "@/utils/consent";
 import FirstRunConsent from "@/components/modals/FirstRunConsent";
-import DebugStatus from '@/screens/DebugStatus';
-import DebugStatus from '@/screens/DebugStatus';
 
-
-// 👇 NEW: import the breathing player
+// 👇 Breathing player
 import BreathingPlayer from '@/screens/breathing/BreathingPlayer';
 
 const queryClient = new QueryClient();
@@ -33,16 +30,11 @@ const AppContent = () => {
   const [appState, setAppState] = useState<AppState>('splash');
   const navigate = useNavigate();
   const location = useLocation();
-  // 👇 Allow /debug to render without consent/splash flows
-if (location.pathname === '/debug') {
-  return <DebugStatus />;
-}
-  const [consentAccepted, setConsentAccepted] = useState<boolean>(hasConsent());
+  const [consentAccepted, setConsentAcceptedState] = useState<boolean>(hasConsent());
+
   if (!consentAccepted) {
-  return <FirstRunConsent onAccepted={() => setConsentAccepted(true)} />;
-}
-
-
+    return <FirstRunConsent onAccepted={() => setConsentAcceptedState(true)} />;
+  }
 
   const handleSplashComplete = () => {
     setAppState('mood-check');
@@ -53,7 +45,7 @@ if (location.pathname === '/debug') {
     navigate('/cards');
   };
 
-  // Hide bottom nav on full-screen flows (meditation + breathing)
+  // Hide bottom nav on full-screen flows (meditation + breathing + gratitude)
   const hideNavigation =
     location.pathname.startsWith('/meditation/') ||
     location.pathname.startsWith('/breathing/') ||
@@ -77,13 +69,12 @@ if (location.pathname === '/debug') {
         <Route path="/profile" element={<Profile />} />
         <Route path="/gratitude/new" element={<GratitudeNew />} />
         <Route path="/gratitude/history" element={<GratitudeHistory />} />
-        <Route path="/debug" element={<DebugStatus />} />
 
         {/* Meditation routes */}
         <Route path="/meditation/:meditationId" element={<MeditationPlayer />} />
         <Route path="/meditation/:meditationId/complete" element={<MeditationComplete />} />
 
-        {/* 👇 NEW: Breathing route */}
+        {/* Breathing route */}
         <Route path="/breathing/:breathingId" element={<BreathingPlayer />} />
       </Routes>
       
