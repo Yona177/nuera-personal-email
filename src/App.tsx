@@ -47,9 +47,10 @@ const AppContent = () => {
 
   // Hide bottom nav on full-screen flows (meditation + breathing + gratitude)
   const hideNavigation =
-    location.pathname.startsWith('/meditation/') ||
-    location.pathname.startsWith('/breathing/') ||
-    location.pathname.startsWith('/gratitude/');
+  location.pathname.startsWith('/meditation/') ||
+  location.pathname.startsWith('/breathing/') ||
+  location.pathname.startsWith('/gratitude/') ||
+  location.pathname.startsWith('/mood-check');
 
   if (appState === 'splash') {
     return <SplashScreen onComplete={handleSplashComplete} />;
@@ -69,6 +70,7 @@ const AppContent = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/gratitude/new" element={<GratitudeNew />} />
         <Route path="/gratitude/history" element={<GratitudeHistory />} />
+        <Route path="/mood-check" element={<MoodCheckIn onComplete={handleMoodComplete} />} />
 
         {/* Meditation routes */}
         <Route path="/meditation/:meditationId" element={<MeditationPlayer />} />
