@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; // 👈 NEW
 import { Heart, X, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -7,72 +6,60 @@ import { SEED_CARDS } from '@/data/cards';
 import { useCardActions } from '@/hooks/useCardActions';
 import type { Card } from '@/types/card';
 
+// 👇 Recommender imports
+import {
+  rankCards,
+  getLastMoodSignal,
+  recordPositive,
+  recordNegative
+} from '@/utils/recommend';
+
 const SwipeCards = () => {
-  const [cards] = useState<Card[]>(SEED_CARDS);
+  // Rank the initial deck based on the last mood signal (moods + free text) and prefs
+  const [cards, setCards] = useState<Card[]>(() => {
+    const sig = getLastMoodSignal();
+    return rankCards(SEED_CARDS, sig);
+  });
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const { onSwipeRight, onSwipeLeft } = useCardActions();
-  const navigate = useNavigate(); // 👈 NEW
 
   const currentCard = cards[currentIndex];
-  
+
   const handleSwipe = (direction: 'left' | 'right') => {
     if (currentCard) {
       if (direction === 'right') {
-        // Existing like handler
+        // ✅ record a positive preference for this card type
+        recordPositive(currentCard);
         onSwipeRight(currentCard);
-
-        // 👇 NEW: Route based on card.action
-        const a = currentCard.action;
-        if (a) {
-          switch (a.kind) {
-            case 'open_meditation':
-              navigate(`/meditation/${a.meditationId}`);
-              break;
-            case 'open_breathing':        // preferred new action
-              navigate(`/breathing/${a.breathingId}`);
-              break;
-            case 'open_breath':           // legacy support
-              navigate(`/breathing/${a.patternId}`);
-              break;
-            case 'open_gratitude':
-              navigate('/gratitude/new');
-              break;
-            case 'open_cbt':
-              // navigate(`/cbt/${a.tipId}`);
-              break;
-            case 'open_companion':
-              // navigate(`/companion`);
-              break;
-            case 'open_sleep':
-              // navigate(`/sleep/${a.routineId}`);
-              break;
-            case 'none':
-            default:
-              // no-op
-              break;
-          }
-        }
       } else {
+        // 👎 slight penalty
+        recordNegative(currentCard);
         onSwipeLeft(currentCard);
       }
     }
-    
+
     setSwipeDirection(direction);
-    
+
+    // advance to next card after the swipe animation
     setTimeout(() => {
       if (currentIndex < cards.length - 1) {
         setCurrentIndex(prev => prev + 1);
       } else {
-        setCurrentIndex(0); // Loop back to start
+        // loop back to start
+        setCurrentIndex(0);
       }
       setSwipeDirection(null);
     }, 300);
   };
 
   const handleReset = () => {
+    // Optional: re-rank the full deck on reset for a “fresh start” using latest prefs + last mood
+    const sig = getLastMoodSignal();
+    const reRanked = rankCards(SEED_CARDS, sig);
+    setCards(reRanked);
     setCurrentIndex(0);
     setSwipeDirection(null);
   };
@@ -88,7 +75,7 @@ const SwipeCards = () => {
           {currentIndex < cards.length - 1 && (
             <div className="absolute inset-0 swipe-card bg-card/50 scale-95 -rotate-1" />
           )}
-          
+
           {/* Current card */}
           <div
             ref={cardRef}
@@ -99,12 +86,12 @@ const SwipeCards = () => {
             )}
           >
             {(currentCard.image || currentCard.imageUrl) && (
-              <div 
+              <div
                 className="w-full h-48 rounded-2xl bg-cover bg-center mb-6"
                 style={{ backgroundImage: `url(${currentCard.image || currentCard.imageUrl})` }}
               />
             )}
-            
+
             <div className="flex-1">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-2xl font-bold text-foreground">
@@ -116,29 +103,39 @@ const SwipeCards = () => {
                   </span>
                 )}
               </div>
-              
-              <p className="text-muted-foreground leading-relaxed text-lg">
-                {currentCard.content}
-              </p>
+
+              {currentCard.subtitle && (
+                <p className="text-sm text-muted-foreground mb-2">{currentCard.subtitle}</p>
+              )}
+
+              {currentCard.content && (
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                  {currentCard.content}
+                </p>
+              )}
             </div>
 
             {/* Swipe Indicators */}
-            <div className={cn(
-              "swipe-indicator left",
-              swipeDirection === 'left' && "opacity-100"
-            )}>
+            <div
+              className={cn(
+                "swipe-indicator left",
+                swipeDirection === 'left' && "opacity-100"
+              )}
+            >
               ✕
             </div>
-            <div className={cn(
-              "swipe-indicator right", 
-              swipeDirection === 'right' && "opacity-100"
-            )}>
+            <div
+              className={cn(
+                "swipe-indicator right",
+                swipeDirection === 'right' && "opacity-100"
+              )}
+            >
               ♥
             </div>
           </div>
         </div>
 
-        {/* Action Buttons */ }
+        {/* Action Buttons */}
         <div className="flex items-center justify-center space-x-6">
           <Button
             size="lg"
@@ -148,7 +145,7 @@ const SwipeCards = () => {
           >
             <X size={24} />
           </Button>
-          
+
           <Button
             size="sm"
             variant="ghost"
@@ -157,7 +154,7 @@ const SwipeCards = () => {
           >
             <RotateCcw size={20} />
           </Button>
-          
+
           <Button
             size="lg"
             onClick={() => handleSwipe('right')}
@@ -174,8 +171,8 @@ const SwipeCards = () => {
               key={index}
               className={cn(
                 "w-2 h-2 rounded-full transition-all duration-300",
-                index === currentIndex 
-                  ? "bg-primary w-6" 
+                index === currentIndex
+                  ? "bg-primary w-6"
                   : "bg-muted"
               )}
             />
