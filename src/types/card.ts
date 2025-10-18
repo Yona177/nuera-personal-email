@@ -4,21 +4,16 @@ export type CardType =
   | "cbt"
   | "companion"
   | "sleep"
-  | "perspective";
+  | "perspective"
+  | "gratitude"; // 👈 added
 
-/**
- * Action types
- * - New: `open_breathing` with `breathingId` (preferred going forward)
- * - Legacy: `open_breath` with `patternId` (kept for backward compatibility)
- */
 export type CardAction =
   | { kind: "open_meditation"; meditationId: string }
-  | { kind: "open_breathing"; breathingId: string }   // NEW, preferred
-  | { kind: "open_breath"; patternId: string }        // LEGACY, still supported
+  | { kind: "open_breath"; patternId: string }
   | { kind: "open_cbt"; tipId: string }
   | { kind: "open_companion" }
   | { kind: "open_sleep"; routineId: string }
-  | { kind: "open_gratitude" }
+  | { kind: "open_gratitude" } // 👈 added
   | { kind: "none" };
 
 export type Card = {
@@ -28,9 +23,9 @@ export type Card = {
   subtitle?: string;
   content?: string;
   imageUrl?: string;
-  image?: string;      // compatibility with existing code
+  image?: string; // Keep compatibility with existing code
   durationSec?: number;
-  duration?: string;   // compatibility with existing code
+  duration?: string; // Keep compatibility with existing code
   tags?: string[];
   action?: CardAction;
 };
