@@ -2,7 +2,7 @@ import { type Card } from "@/types/card";
 import meditationCard from "@/assets/meditation-card.png";
 import breathingCard from "@/assets/breathing-card.png";
 import journalCard from "@/assets/journal-card.png";
-import companionCard from '@/assets/companion-card.svg';
+import companionCard from '@/assets/companion-abstract.svg';
 
 /**
  * Tags cheat-sheet used by the recommender:
