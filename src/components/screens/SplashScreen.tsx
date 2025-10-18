@@ -30,7 +30,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         </h1>
         
         <p className="text-xl text-white/90 font-light max-w-md mx-auto leading-relaxed">
-          Easy, personalized mental wellness in swipes and scrolls
+          Just feel better
         </p>
         
         <div className="mt-12 flex justify-center space-x-2">
