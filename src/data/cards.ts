@@ -1,7 +1,7 @@
 import { type Card } from "@/types/card";
 import meditationCard from '@/assets/meditation-card.png';
 import breathingCard from '@/assets/breathing-card.png';
-import journalCard from '@/assets/journal-card.png';
+import journalCard from '@/assets/journal-card.png'; // 👈 the “old” gratitude image
 
 export const SEED_CARDS: Card[] = [
   {
@@ -11,14 +11,14 @@ export const SEED_CARDS: Card[] = [
     subtitle: "Center yourself and breathe",
     content: "Take a moment to center yourself with this gentle meditation. Focus on your breath and let your thoughts flow freely.",
     imageUrl: meditationCard,
-    image: meditationCard, // Keep compatibility
+    image: meditationCard,
     durationSec: 300,
-    duration: "5 min", // Keep compatibility
+    duration: "5 min",
     action: { kind: "open_meditation", meditationId: "mindful5" }
   },
   {
     id: "card_calm2",
-    type: "meditation", 
+    type: "meditation",
     title: "2-Minute Calm",
     subtitle: "Quick reset for busy moments",
     content: "A short but powerful meditation to reset your mind and find instant calm wherever you are.",
@@ -37,19 +37,35 @@ export const SEED_CARDS: Card[] = [
     image: breathingCard,
     durationSec: 180,
     duration: "3 min",
-    action: { kind: "open_breathing", breathingId: "box44" }
+    action: { kind: "open_breath", patternId: "box44" } // 👈 optional: wire to breathing player if you added it
   },
+
+  // ✅ NEW Gratitude card using the old image
   {
-    id: "card_journal",
-    type: "perspective",
-    title: "Gratitude Reflection", 
-    content: "What are three things you're grateful for today? Write them down and reflect on why they matter to you.",
-    imageUrl: journalCard,
-    image: journalCard,
-    durationSec: 120,
-    duration: "2 min",
-    action: { kind: "none" }
+    id: "card_gratitude",
+    type: "gratitude",
+    title: "Gratitude Reflection",
+    content: "What are three things you're grateful for today? Jot them down and why they mattered.",
+    imageUrl: journalCard, // 👈 reuse old image
+    image: journalCard,    // 👈 keep compatibility
+    durationSec: 180,
+    duration: "3 min",
+    action: { kind: "open_gratitude" } // 👈 opens your Gratitude screen
   },
+
+  // (Optional) If you still want to keep the old “perspective” card, you can, or remove it:
+  // {
+  //   id: "card_journal",
+  //   type: "perspective",
+  //   title: "Gratitude Reflection",
+  //   content: "What are three things you're grateful for today? Write them down and reflect on why they matter to you.",
+  //   imageUrl: journalCard,
+  //   image: journalCard,
+  //   durationSec: 120,
+  //   duration: "2 min",
+  //   action: { kind: "none" }
+  // },
+
   {
     id: "card_companion",
     type: "companion",
@@ -57,13 +73,5 @@ export const SEED_CARDS: Card[] = [
     content: "I'm here to listen and support you. What's on your mind today? Share your thoughts and feelings in a safe space.",
     duration: "Open",
     action: { kind: "open_companion" }
-  },
-  {
-  id: "card_gratitude",
-  type: "perspective",
-  title: "Gratitude Reflection",
-  content: "What are 3 things you’re grateful for today?",
-  duration: "1–2 min",
-  action: { kind: "open_gratitude" }
-}
+  }
 ];
