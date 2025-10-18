@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, X, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -22,6 +23,7 @@ const SwipeCards = () => {
   });
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const { onSwipeRight, onSwipeLeft } = useCardActions();
@@ -68,9 +70,19 @@ const SwipeCards = () => {
 
   return (
     <div className="min-h-screen bg-gradient-calm p-6 pb-32">
-      <div className="max-w-sm mx-auto pt-16">
-        {/* Card Stack */}
-        <div className="relative h-[500px] mb-8">
+<div className="max-w-sm mx-auto pt-16 pt-4">
+  {/* Reset mood button */}
+  <div className="flex items-center mb-4">
+    <button
+  onClick={() => navigate('/mood-check')}
+      className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+    >
+      <span className="mr-1">←</span> Reset mood
+    </button>
+  </div>
+
+  {/* Card Stack */}
+  <div className="relative h-[500px] mb-8">
           {/* Next card (background) */}
           {currentIndex < cards.length - 1 && (
             <div className="absolute inset-0 swipe-card bg-card/50 scale-95 -rotate-1" />
