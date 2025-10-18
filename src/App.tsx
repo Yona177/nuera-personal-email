@@ -15,6 +15,7 @@ import MeditationPlayer from '@/screens/meditation/MeditationPlayer';
 import MeditationComplete from '@/screens/meditation/MeditationComplete';
 import GratitudeNew from "@/screens/gratitude/GratitudeNew";
 import GratitudeHistory from "@/screens/gratitude/GratitudeHistory";
+import CompanionChat from "@/screens/companion/CompanionChat";
 // new imports oct 4th 25
 import { hasConsent } from "@/utils/consent";
 import FirstRunConsent from "@/components/modals/FirstRunConsent";
@@ -68,6 +69,7 @@ const AppContent = () => {
         <Route path="/reels" element={<ReelsFeed />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/companion" element={<CompanionChat />} />
         <Route path="/gratitude/new" element={<GratitudeNew />} />
         <Route path="/gratitude/history" element={<GratitudeHistory />} />
         <Route path="/mood-check" element={<MoodCheckIn onComplete={handleMoodComplete} />} />
