@@ -2,6 +2,7 @@ import { type Card } from "@/types/card";
 import meditationCard from "@/assets/meditation-card.png";
 import breathingCard from "@/assets/breathing-card.png";
 import journalCard from "@/assets/journal-card.png";
+import companionCard from '@/assets/companion-card.svg';
 
 /**
  * Tags cheat-sheet used by the recommender:
@@ -74,15 +75,16 @@ export const SEED_CARDS: Card[] = [
     action: { kind: "none" } // handled via /gratitude/new route from the deck logic later if desired
   },
 
-  {
-    id: "card_companion",
-    type: "companion",
-    title: "AI Companion Chat",
-    content:
-      "I'm here to listen and support you. What's on your mind today? Share your thoughts in a safe space.",
-    // no image needed; lightweight card
-    duration: "Open",
-    tags: ["companion", "mindfulness", "calm"],
-    action: { kind: "open_companion" }
-  }
+{
+  id: "card_companion",
+  type: "companion",
+  title: "AI Companion Chat",
+  subtitle: "Here to listen, anytime",
+  content: "I'm here to listen and support you. What's on your mind today? Share your thoughts and feelings in a safe space.",
+  imageUrl: companionCard,
+  image: companionCard, // keep compatibility with existing rendering
+  duration: "Open",
+  tags: ["companion","support","chat","mindfulness"],
+  action: { kind: "open_companion" }
+}
 ];
