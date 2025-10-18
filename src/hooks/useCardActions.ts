@@ -1,40 +1,41 @@
 import { useNavigate } from "react-router-dom";
 import type { Card } from "@/types/card";
-import { track } from "@/utils/analytics";
 
 export function useCardActions() {
   const nav = useNavigate();
 
   function onSwipeRight(card: Card) {
-    track("card_swipe", { id: card.id, type: card.type, dir: "right" });
+    // Positive action
+    if (!card.action) return;
 
-    const action = card.action;
-    if (!action) return;
-
-    switch (action.kind) {
+    switch (card.action.kind) {
       case "open_meditation":
-        nav(`/meditation/${action.meditationId}`);
-        return;
+        nav(`/meditation/${card.action.meditationId}`);
+        break;
       case "open_breath":
-        // Future: nav(`/breathing/${action.patternId}`);
-        return;
+        nav(`/breathing/${card.action.patternId}`);
+        break;
       case "open_cbt":
-        // Future: nav(`/cbt/${action.tipId}`);
-        return;
+        // e.g., nav(`/cbt/${card.action.tipId}`);
+        break;
       case "open_companion":
-        // Future: nav("/companion");
-        return;
+        // e.g., nav(`/companion`);
+        break;
       case "open_sleep":
-        // Future: nav(`/sleep/${action.routineId}`);
-        return;
+        // e.g., nav(`/sleep/${card.action.routineId}`);
+        break;
+      case "open_gratitude":
+        nav(`/gratitude/new`); // 👈 Gratitude screen
+        break;
+      case "none":
       default:
-        return;
+        // do nothing
+        break;
     }
   }
 
-  function onSwipeLeft(card: Card) {
-    track("card_swipe", { id: card.id, type: card.type, dir: "left" });
-    // Just skip the card - no action needed
+  function onSwipeLeft(_card: Card) {
+    // Negative action — right now do nothing (or track “dismiss”)
   }
 
   return { onSwipeRight, onSwipeLeft };
