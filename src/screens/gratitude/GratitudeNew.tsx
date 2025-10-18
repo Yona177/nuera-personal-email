@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"; // 👈 added useEffect
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { Button } from "@/components/ui/button";
@@ -8,110 +8,109 @@ import { track } from "@/utils/analytics";
 import { GratitudeEntry, GratitudeItem } from "@/types/gratitude";
 import { saveGratitudeEntry } from "@/store/gratitude";
 import { ArrowLeft } from "lucide-react";
+import ThankYouPrompt from "@/components/modals/ThankYouPrompt";
+import { buildThankYouMessage } from "@/utils/share";
 
 const DEFAULT_CHIPS = ["Family","Friends","Work","Health","Learning","Nature","Home","Food","Creativity","Music","Luck","Other"];
+const MAX_ITEMS = 3;
 
 export default function GratitudeNew() {
   const nav = useNavigate();
-  const [step, setStep] = useState(0);            // 0..2 for three items, 3 for savor, 4 done
+
+  // itemIndex = which item we’re on (0..MAX_ITEMS-1)
+  const [itemIndex, setItemIndex] = useState(0);
   const [items, setItems] = useState<GratitudeItem[]>([
     { id: uuid(), what: "", category: "" },
     { id: uuid(), what: "", category: "" },
     { id: uuid(), what: "", category: "" },
   ]);
-  const [moodBefore] = useState<number | undefined>(undefined);
-  const [moodAfter, setMoodAfter] = useState<number | undefined>(undefined);
 
-  const current = items[step] || null;
-  const progress = useMemo(() => Math.min(3, step + 1), [step]);
+  // Thank-you modal
+  const [tyOpen, setTyOpen] = useState(false);
+  const [tyMessage, setTyMessage] = useState("");
 
-  // 🔹 Fire when user starts this flow
+  // Completion step: after “add another?” flow, we show a short mood slider
+  const [postMood, setPostMood] = useState<number | undefined>(undefined);
+  const [showMood, setShowMood] = useState(false);
+
   useEffect(() => {
-    track("gratitude_start", { source: "gratitude_reflection" });
+    track("gratitude_start", {});
   }, []);
 
+  const current = items[itemIndex];
+  const title = useMemo(() => {
+    if (itemIndex === 0) return "Gratitude";
+    return `Gratitude #${itemIndex + 1}`;
+  }, [itemIndex]);
+
   const setCurrent = (patch: Partial<GratitudeItem>) => {
-    setItems(prev => prev.map((it, i) => i === step ? { ...it, ...patch } : it));
+    setItems(prev => prev.map((it, i) => i === itemIndex ? { ...it, ...patch } : it));
   };
 
-  const goNext = () => {
-    // require at least 'what' for steps 0..2
-    if (step <= 2) {
-      if (!current?.what?.trim()) return;
+  function submitCurrent() {
+    if (!current?.what?.trim()) return;
 
-      // 🔹 Log each completed item (idx 0..2)
-      track("gratitude_item_added", {
-        idx: step,
-        category: current?.category || null,
-        hasWhy: !!current?.why,
-      });
+    // Build thank-you message (if who present or even if not)
+    const message = buildThankYouMessage({
+      who: current?.who?.trim() || undefined,
+      what: current.what.trim(),
+      why: current?.why?.trim() || undefined,
+    });
+    setTyMessage(message);
+    setTyOpen(true);
+  }
 
-      if (step < 2) { 
-        setStep(step + 1); 
-        return; 
+  function afterThankYou(channel: "sms" | "copy" | "skip" | "email") {
+    track("gratitude_thanks_sent", { channel, hasWho: !!current?.who });
+
+    // Ask to add another (unless we hit MAX_ITEMS)
+    if (itemIndex < MAX_ITEMS - 1) {
+      // Lightweight confirm UI
+      const add = window.confirm(itemIndex === 0 ? "Add a second gratitude?" : "Add another gratitude?");
+      if (add) {
+        setItemIndex(itemIndex + 1);
+        return; // stay in flow
       }
-      // moving into savor
-      setStep(3);  
-      track("gratitude_savor_start");
-      return;
     }
-    if (step === 3) { 
-      setStep(4); 
-      return; 
-    } // done step
-    if (step === 4) finish();
-  };
+    // Otherwise we’re done entering items → show mood slider
+    setShowMood(true);
+  }
 
-  const finish = () => {
+  function finishAll() {
     const entry: GratitudeEntry = {
       id: uuid(),
       createdAt: Date.now(),
-      items: items.filter(i => i.what?.trim()),
-      moodBefore,
-      moodAfter
+      items: items
+        .slice(0, itemIndex + 1)
+        .filter(i => i.what?.trim()),
+      moodBefore: undefined, // not captured in this simplified flow
+      moodAfter: postMood
     };
     saveGratitudeEntry(entry);
-    track("gratitude_complete", { count: entry.items.length, moodBefore, moodAfter });
+    track("gratitude_complete", {
+      count: entry.items.length,
+      moodAfter: postMood
+    });
     nav(-1);
-  };
+  }
 
-  // simple “savor” bubble reused from breathing styles
-  const savor = (
-    <div className="text-center">
-      <h2 className="text-2xl font-semibold mb-2">Savor the moment</h2>
-      <p className="text-muted-foreground mb-8">Close your eyes and replay one of your gratitudes for 10 seconds.</p>
-      <div className="mx-auto my-6 h-40 w-40 rounded-full bg-card shadow-card animate-pulse" />
-      <Button onClick={goNext} className="mt-2">Continue</Button>
-    </div>
-  );
-
-  if (step >= 3) {
+  // Render: mood screen at the very end
+  if (showMood) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="mx-auto max-w-md p-6 pt-16">
-          <div className="mb-6 flex items-center justify-between">
-            <Button variant="ghost" size="sm" onClick={() => nav(-1)} className="h-10 w-10 rounded-full p-0"><ArrowLeft size={20}/></Button>
-            <h2 className="text-lg font-semibold">Gratitude</h2>
-            <div className="w-10" />
-          </div>
-
-          {step === 3 ? savor : (
-            <div className="text-center">
-              <h2 className="text-2xl font-semibold mb-2">How do you feel now?</h2>
-              <p className="text-muted-foreground mb-6">Slide to rate your mood after reflecting.</p>
-              <input
-                type="range"
-                min={1} max={5}
-                className="w-full mb-3"
-                value={moodAfter ?? 3}
-                onChange={e => setMoodAfter(parseInt(e.target.value))}
-              />
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mb-8">
-                <span>1</span><span>…</span><span>5</span>
-              </div>
-              <Button onClick={finish}>Save</Button>
-            </div>
-          )}
+        <div className="mx-auto max-w-md p-6 pt-16 text-center">
+          <h2 className="mb-2 text-2xl font-semibold">How do you feel now?</h2>
+          <p className="mb-6 text-muted-foreground">Slide quickly to rate your mood after reflecting.</p>
+          <input
+            type="range"
+            min={1}
+            max={5}
+            className="w-full mb-3"
+            value={postMood ?? 3}
+            onChange={e => setPostMood(parseInt(e.target.value))}
+          />
+          <div className="mb-8 text-xs text-muted-foreground">1 … 5</div>
+          <Button onClick={finishAll}>Save</Button>
         </div>
       </div>
     );
@@ -122,30 +121,31 @@ export default function GratitudeNew() {
       <div className="mx-auto max-w-md p-6 pt-16">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <Button variant="ghost" size="sm" onClick={() => nav(-1)} className="h-10 w-10 rounded-full p-0"><ArrowLeft size={20}/></Button>
+          <Button variant="ghost" size="sm" onClick={() => nav(-1)} className="h-10 w-10 rounded-full p-0">
+            <ArrowLeft size={20}/>
+          </Button>
           <h2 className="text-lg font-semibold">Gratitude</h2>
           <div className="w-10" />
         </div>
 
-        {/* Progress */}
-        <div className="flex justify-center gap-2 mb-6">
-          {[0,1,2].map(i => (
-            <div key={i} className={`h-2 w-10 rounded-full ${i <= step ? 'bg-primary' : 'bg-muted'}`} />
-          ))}
-        </div>
-
-        <h1 className="text-2xl font-semibold mb-2">Thing {progress} of 3</h1>
-        <p className="text-muted-foreground mb-5">Pick a topic, then add a quick note and why it mattered.</p>
+        {/* Title */}
+        <h1 className="text-2xl font-semibold mb-2">{title}</h1>
+        <p className="text-muted-foreground mb-5">
+          Pick a topic, add one thing, and (optionally) thank someone.
+        </p>
 
         {/* Chips */}
-        <div className="flex flex-wrap gap-2 mb-5">
+        <div className="mb-5 flex flex-wrap gap-2">
           {DEFAULT_CHIPS.map(ch => {
             const active = (current?.category || "") === ch;
             return (
               <button
                 key={ch}
                 onClick={() => setCurrent({ category: ch === "Other" ? "" : ch })}
-                className={`px-3 py-1 rounded-full text-sm border ${active ? 'bg-primary text-primary-foreground border-primary' : 'bg-card border-border hover:bg-accent'}`}
+                className={`px-3 py-1 rounded-full text-sm border ${
+                  active ? 'bg-primary text-primary-foreground border-primary'
+                        : 'bg-card border-border hover:bg-accent'
+                }`}
               >
                 {ch}
               </button>
@@ -155,7 +155,7 @@ export default function GratitudeNew() {
 
         {/* What (required) */}
         <div className="mb-4">
-          <label className="block text-sm mb-1">What’s one thing you’re grateful for?</label>
+          <label className="mb-1 block text-sm">What’s one thing you’re grateful for?</label>
           <Input
             value={current?.what || ""}
             onChange={e => setCurrent({ what: e.target.value })}
@@ -165,7 +165,7 @@ export default function GratitudeNew() {
 
         {/* Why (optional) */}
         <div className="mb-4">
-          <label className="block text-sm mb-1">Why did it matter?</label>
+          <label className="mb-1 block text-sm">Why did it matter?</label>
           <Textarea
             value={current?.why || ""}
             onChange={e => setCurrent({ why: e.target.value })}
@@ -174,25 +174,39 @@ export default function GratitudeNew() {
           />
         </div>
 
-        {/* Who + tiny action (optional) */}
-        <div className="mb-6 grid grid-cols-2 gap-3">
+        {/* Who (optional) */}
+        <div className="mb-6 grid grid-cols-1 gap-3">
           <Input
             value={current?.who || ""}
             onChange={e => setCurrent({ who: e.target.value })}
             placeholder="Who (optional)"
           />
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={!!current?.willAct}
-              onChange={e => setCurrent({ willAct: e.target.checked })}
-            />
-            Send a thank-you later
-          </label>
         </div>
 
-        <Button onClick={goNext} className="w-full">Next</Button>
+        <Button
+          className="w-full"
+          onClick={() => {
+            // Save the item to our in-memory list; analytics:
+            if (!current?.what?.trim()) return;
+            track("gratitude_item_saved", {
+              category: current.category || "Uncategorized",
+              hasWho: !!current.who,
+              hasWhy: !!current.why
+            });
+            submitCurrent();
+          }}
+        >
+          Submit
+        </Button>
       </div>
+
+      {/* Thank-you modal */}
+      <ThankYouPrompt
+        open={tyOpen}
+        message={tyMessage}
+        onSent={(channel) => afterThankYou(channel)}
+        onClose={() => setTyOpen(false)}
+      />
     </div>
   );
 }
