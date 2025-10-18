@@ -16,25 +16,41 @@ type Prefs = {
   typeScore: Record<string, number>;
 };
 
-// ---- persistence helpers
+// ---- safe helpers
+
+function withDefaults(p: Partial<Prefs> | null | undefined): Prefs {
+  return {
+    typeScore: (p && typeof p.typeScore === "object" && p.typeScore) ? p.typeScore : {},
+  };
+}
 
 function loadPrefs(): Prefs {
-  try { return JSON.parse(localStorage.getItem(LS_PREFS) || "{}") as Prefs; } catch { return { typeScore: {} }; }
+  try {
+    const raw = localStorage.getItem(LS_PREFS);
+    if (!raw) return withDefaults({});
+    const parsed = JSON.parse(raw);
+    return withDefaults(parsed);
+  } catch {
+    return withDefaults({});
+  }
 }
+
 function savePrefs(p: Prefs) {
-  localStorage.setItem(LS_PREFS, JSON.stringify(p));
+  localStorage.setItem(LS_PREFS, JSON.stringify(withDefaults(p)));
 }
+
+// ---- public persistence API
 
 export function recordPositive(card: Card) {
   const p = loadPrefs();
-  const t = card.type;
+  const t = card.type || "unknown";
   p.typeScore[t] = (p.typeScore[t] || 0) + 1;
   savePrefs(p);
 }
 
 export function recordNegative(card: Card) {
   const p = loadPrefs();
-  const t = card.type;
+  const t = card.type || "unknown";
   p.typeScore[t] = (p.typeScore[t] || 0) - 0.5; // small penalty
   savePrefs(p);
 }
@@ -58,6 +74,10 @@ const MOOD_TO_TAGS: Record<string, string[]> = {
   tired: ["sleep","calm"],
   wired: ["breath","calm"],
   unfocused: ["focus","mindfulness","breath"],
+
+  // optionally support "focused" too, if your UI uses that id
+  focused: ["focus","mindfulness","breath"],
+
   grateful: ["gratitude","mindfulness"],
   okay: ["mindfulness"],
   happy: ["mindfulness","gratitude","energize"],
@@ -93,7 +113,10 @@ function scoreCard(card: Card, moodWeights: Record<string, number>, prefs: Prefs
   let s = 0;
   const tags = card.tags || [];
   tags.forEach(t => { s += (moodWeights[t] || 0) * 2; });
-  s += (prefs.typeScore[card.type] || 0) * 1;
+
+  const typeScore = (prefs && prefs.typeScore) ? (prefs.typeScore[card.type] || 0) : 0;
+  s += typeScore * 1;
+
   return s;
 }
 
