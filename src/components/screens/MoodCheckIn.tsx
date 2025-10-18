@@ -42,10 +42,10 @@ const MoodCheckIn = ({ onComplete }: MoodCheckInProps) => {
       <div className="max-w-md mx-auto pt-16">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold text-foreground mb-4">
-            How are you feeling?
+            How do you feel?
           </h1>
           <p className="text-muted-foreground">
-            Tap one or more bubbles that match your mood
+            Pick a few or tell us
           </p>
         </div>
 
