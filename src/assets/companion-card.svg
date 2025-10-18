@@ -1,0 +1,49 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A5B4FC"/>
+      <stop offset="1" stop-color="#93C5FD"/>
+    </linearGradient>
+    <linearGradient id="bubble" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="white" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="white" stop-opacity="0.85"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="12" result="blur"/>
+      <feOffset dx="0" dy="6" result="off"/>
+      <feComposite in="off" in2="blur" operator="over" result="shadow"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.20 0"/>
+      <feBlend in="SourceGraphic" in2="shadow" mode="normal"/>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
+  <circle cx="1040" cy="120" r="140" fill="white" fill-opacity="0.12"/>
+  <circle cx="160" cy="520" r="180" fill="white" fill-opacity="0.10"/>
+
+  <!-- chat bubble -->
+  <g filter="url(#soft)">
+    <path d="M300 190h600c44 0 80 36 80 80v120c0 44-36 80-80 80H520l-95 62c-9 6-21-1-21-12v-50H300c-44 0-80-36-80-80V270c0-44 36-80 80-80z" fill="url(#bubble)"/>
+  </g>
+
+  <!-- face + heart icon (friendly AI) -->
+  <g transform="translate(360,256)">
+    <circle cx="64" cy="64" r="56" fill="#EEF2FF" stroke="#D1D5DB" stroke-width="2"/>
+    <circle cx="48" cy="56" r="6" fill="#9CA3AF"/>
+    <circle cx="80" cy="56" r="6" fill="#9CA3AF"/>
+    <path d="M48 86c10 8 22 8 32 0" stroke="#9CA3AF" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(680,250)">
+    <path d="M64 28c14-20 48-12 48 14 0 22-24 34-48 54-24-20-48-32-48-54 0-26 34-34 48-14z" fill="#FCA5A5"/>
+  </g>
+
+  <!-- title-ish hint -->
+  <text x="520" y="330" text-anchor="middle" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto" font-size="48" fill="#111827" opacity="0.9">
+    AI Companion Chat
+  </text>
+  <text x="520" y="380" text-anchor="middle" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto" font-size="26" fill="#374151" opacity="0.85">
+    Here to listen, anytime.
+  </text>
+</svg>
