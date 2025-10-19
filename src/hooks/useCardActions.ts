@@ -43,6 +43,11 @@ export function useCardActions() {
       default:
         // no navigation or side-effect
         break;
+
+      case "open_move":
+        nav("/move");
+        break;
+
     }
   }
 
