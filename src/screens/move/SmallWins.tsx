@@ -9,7 +9,7 @@ const SCREENS = [
     { id: "stretch",   label: "Stretch for 2 minutes" },
     { id: "friend",    label: "Call or text a friend" },
     { id: "air",       label: "Step outside for fresh air" },
-    { id: "song",      label: "Play your favorite song" },
+    { id: "song",      label: "Play a favorite song" },
     { id: "gratitude", label: "Write one thing you’re grateful for" },
     { id: "hug",       label: "Pet an animal or hug someone" }
   ],
