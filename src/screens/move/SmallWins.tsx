@@ -90,11 +90,11 @@ export default function SmallWins() {
     const label = SCREENS.flat().find(a => a.id === selectedAction)?.label ?? "Action";
     return (
 <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-pink-50 p-6 pb-24 transition-all duration-700 ease-in-out">
-        <button
+       <button
   onClick={() => window.history.back()}
-  className="absolute top-4 left-4 text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+  className="fixed top-5 left-5 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors z-50"
 >
-  ← Back
+  <span className="text-lg">←</span> Back
 </button>
         <div className="max-w-md mx-auto pt-16 text-center relative">
           <Button
