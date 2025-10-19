@@ -72,6 +72,7 @@ export default function SmallWins() {
     track("move_done", { action: selectedAction });
   }
 
+  // 🎉 Celebration screen
   if (done) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-background text-center p-6">
@@ -85,56 +86,65 @@ export default function SmallWins() {
     );
   }
 
+  // 👉 Detail screen (after a bubble is selected)
   if (selectedAction) {
     const detail = ACTION_DETAILS[selectedAction];
     const label = SCREENS.flat().find(a => a.id === selectedAction)?.label ?? "Action";
+
     return (
-<div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-pink-50 p-6 pb-24 transition-all duration-700 ease-in-out">
-       <button
-  onClick={() => window.history.back()}
-  className="fixed top-5 left-5 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors z-50"
->
-  <span className="text-lg">←</span> Back
-</button>
+      <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-pink-50 p-6 pb-24 transition-all duration-700 ease-in-out">
+        {/* Good back button (returns to list) */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setSelectedAction(null)}
+          className="absolute left-4 top-4 h-10 w-10 rounded-full p-0"
+          aria-label="Back"
+        >
+          <ArrowLeft size={20} />
+        </Button>
+
         <div className="max-w-md mx-auto pt-16 text-center relative">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSelectedAction(null)}
-            className="absolute left-4 top-4 h-10 w-10 rounded-full p-0"
-          >
-            <ArrowLeft size={20} />
-          </Button>
           <h1 className="text-2xl font-semibold mb-4">{label}</h1>
           <p className="text-muted-foreground mb-8">{detail}</p>
-          <Button onClick={handleAccomplished} className="rounded-full px-6">Accomplished ✓</Button>
+          <Button onClick={handleAccomplished} className="rounded-full px-6">
+            Accomplished ✓
+          </Button>
         </div>
       </div>
     );
   }
 
+  // 🫧 Select screen (bubbles)
   const actions = SCREENS[screenIndex];
   return (
     <div className="min-h-screen bg-background p-6">
-      <button
-  onClick={() => window.history.back()}
-  className="absolute top-4 left-4 text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
->
-  ← Back
-</button>
+      {/* Use the same good back button UI on the first screen too */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => window.history.back()}
+        className="absolute left-4 top-4 h-10 w-10 rounded-full p-0"
+        aria-label="Back"
+      >
+        <ArrowLeft size={20} />
+      </Button>
+
       <div className="max-w-md mx-auto pt-16 text-center">
-<h1 className="text-3xl font-bold text-primary mb-2 tracking-tight">Small Wins</h1>
-<p className="text-base text-muted-foreground italic">Tiny actions that make a big lift.</p>
-        <div className="flex flex-wrap justify-center gap-3">
+        <h1 className="text-3xl font-bold text-primary mb-2 tracking-tight">Small Wins</h1>
+        <p className="text-base text-muted-foreground italic">Tiny actions that make a big lift.</p>
+
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
           {actions.map(action => (
             <button
               key={action.id}
               onClick={() => handleSelect(action.id)}
-className="rounded-full border px-4 py-3 text-sm font-medium shadow-sm bg-white/70 backdrop-blur hover:bg-white hover:shadow-md transition-all duration-200"
+              className="rounded-full border px-4 py-3 text-sm font-medium shadow-sm bg-white/70 backdrop-blur hover:bg-white hover:shadow-md transition-all duration-200"
             >
               {action.label}
             </button>
           ))}
+
           <button
             className="px-4 py-2 rounded-full border bg-muted text-sm text-muted-foreground hover:bg-accent"
             onClick={() => setScreenIndex((screenIndex + 1) % SCREENS.length)}
