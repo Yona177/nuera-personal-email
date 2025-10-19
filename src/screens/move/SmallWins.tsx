@@ -89,7 +89,7 @@ export default function SmallWins() {
     const detail = ACTION_DETAILS[selectedAction];
     const label = SCREENS.flat().find(a => a.id === selectedAction)?.label ?? "Action";
     return (
-      <div className="min-h-screen bg-background p-6">
+<div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-pink-50 p-6 pb-24 transition-all duration-700 ease-in-out">
         <button
   onClick={() => window.history.back()}
   className="absolute top-4 left-4 text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
@@ -116,15 +116,21 @@ export default function SmallWins() {
   const actions = SCREENS[screenIndex];
   return (
     <div className="min-h-screen bg-background p-6">
+      <button
+  onClick={() => window.history.back()}
+  className="absolute top-4 left-4 text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+>
+  ← Back
+</button>
       <div className="max-w-md mx-auto pt-16 text-center">
-        <h1 className="text-2xl font-semibold mb-2">Small Wins</h1>
-        <p className="text-muted-foreground mb-6">Tiny actions that make a big lift.</p>
+<h1 className="text-3xl font-bold text-primary mb-2 tracking-tight">Small Wins</h1>
+<p className="text-base text-muted-foreground italic">Tiny actions that make a big lift.</p>
         <div className="flex flex-wrap justify-center gap-3">
           {actions.map(action => (
             <button
               key={action.id}
               onClick={() => handleSelect(action.id)}
-              className="px-4 py-2 rounded-full border bg-card text-sm hover:bg-accent"
+className="rounded-full border px-4 py-3 text-sm font-medium shadow-sm bg-white/70 backdrop-blur hover:bg-white hover:shadow-md transition-all duration-200"
             >
               {action.label}
             </button>
