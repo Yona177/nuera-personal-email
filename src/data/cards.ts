@@ -72,7 +72,7 @@ export const SEED_CARDS: Card[] = [
     durationSec: 180,
     duration: "3 min",
     tags: ["gratitude", "mindfulness"],
-    action: { kind: "none" } // handled via /gratitude/new route from the deck logic later if desired
+    action: { kind: "open_gratitude" } // handled via /gratitude/new route from the deck logic later if desired
   },
 
 {
