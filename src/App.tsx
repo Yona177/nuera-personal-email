@@ -80,6 +80,9 @@ const AppContent = () => {
 
         {/* Breathing route */}
         <Route path="/breathing/:breathingId" element={<BreathingPlayer />} />
+        
+        {/* SmallWins route */}
+        <Route path="/move" element={<SmallWins />} />
       </Routes>
       
       {!hideNavigation && (
