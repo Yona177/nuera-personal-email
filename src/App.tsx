@@ -53,7 +53,8 @@ const AppContent = () => {
   location.pathname.startsWith('/meditation/') ||
   location.pathname.startsWith('/breathing/') ||
   location.pathname.startsWith('/gratitude/') ||
-  location.pathname.startsWith('/mood-check');
+  location.pathname.startsWith('/mood-check') ||
+  location.pathname.startsWith('/move');
 
   if (appState === 'splash') {
     return <SplashScreen onComplete={handleSplashComplete} />;
