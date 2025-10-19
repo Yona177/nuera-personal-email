@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { track } from "@/utils/analytics";
-import { motion } from "framer-motion";
-import Confetti from "react-confetti";
 import { ArrowLeft } from "lucide-react";
 
 const SCREENS = [
@@ -77,7 +75,7 @@ export default function SmallWins() {
   if (done) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-background text-center p-6">
-        <Confetti recycle={false} numberOfPieces={300} />
+        <div className="text-5xl mb-4">🎉</div>
         <h2 className="text-3xl font-semibold mb-2">Nice work!</h2>
         <p className="text-muted-foreground mb-6">That was a small win worth celebrating.</p>
         <Button onClick={() => { setScreenIndex(0); setSelectedAction(null); setDone(false); }}>
@@ -117,14 +115,13 @@ export default function SmallWins() {
         <p className="text-muted-foreground mb-6">Tiny actions that make a big lift.</p>
         <div className="flex flex-wrap justify-center gap-3">
           {actions.map(action => (
-            <motion.button
+            <button
               key={action.id}
               onClick={() => handleSelect(action.id)}
-              whileTap={{ scale: 0.95 }}
               className="px-4 py-2 rounded-full border bg-card text-sm hover:bg-accent"
             >
               {action.label}
-            </motion.button>
+            </button>
           ))}
           <button
             className="px-4 py-2 rounded-full border bg-muted text-sm text-muted-foreground hover:bg-accent"
