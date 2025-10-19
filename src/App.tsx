@@ -75,6 +75,7 @@ const AppContent = () => {
         <Route path="/gratitude/new" element={<GratitudeNew />} />
         <Route path="/gratitude/history" element={<GratitudeHistory />} />
         <Route path="/mood-check" element={<MoodCheckIn onComplete={handleMoodComplete} />} />
+        <Route path="/move" element={<SmallWins />} />
 
         {/* Meditation routes */}
         <Route path="/meditation/:meditationId" element={<MeditationPlayer />} />
@@ -83,8 +84,6 @@ const AppContent = () => {
         {/* Breathing route */}
         <Route path="/breathing/:breathingId" element={<BreathingPlayer />} />
         
-        {/* SmallWins route */}
-        <Route path="/move" element={<SmallWins />} />
       </Routes>
       
       {!hideNavigation && (
