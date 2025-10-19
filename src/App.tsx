@@ -16,6 +16,8 @@ import MeditationComplete from '@/screens/meditation/MeditationComplete';
 import GratitudeNew from "@/screens/gratitude/GratitudeNew";
 import GratitudeHistory from "@/screens/gratitude/GratitudeHistory";
 import CompanionChat from "@/screens/companion/CompanionChat";
+import SmallWins from "@/screens/move/SmallWins";
+
 // new imports oct 4th 25
 import { hasConsent } from "@/utils/consent";
 import FirstRunConsent from "@/components/modals/FirstRunConsent";
