@@ -39,13 +39,13 @@ export function useCardActions() {
         nav(`/gratitude/new`);
         break;
 
+      case "open_move":
+        nav("/move");
+        break;
+
       case "none":
       default:
         // no navigation or side-effect
-        break;
-
-      case "open_move":
-        nav("/move");
         break;
 
     }
