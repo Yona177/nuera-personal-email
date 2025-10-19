@@ -17,6 +17,19 @@ import companionCard from '@/assets/companion-abstract.svg';
  */
 
 export const SEED_CARDS: Card[] = [
+    {
+    id: "card_smallwins",
+    type: "cbt", // “behavioral activation” fits under CBT for now
+    title: "Small Wins",
+    subtitle: "Tiny actions that make a big lift.",
+    content: "Try a quick action to nudge your mood.",
+    imageUrl: breathingCard,   // reuse any existing image asset (or swap later)
+    image: breathingCard,
+    durationSec: 120,
+    duration: "2–3 min",
+    tags: ["behavioral", "activation", "mood"],
+    action: { kind: "open_move" } // ⬅️ Important: points to the Small Wins screen
+  },
   {
     id: "card_mindful5",
     type: "meditation",
