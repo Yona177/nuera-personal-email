@@ -39,9 +39,20 @@ export function useCardActions() {
         nav(`/gratitude/new`);
         break;
 
-      case "open_move":
-        nav("/move");
-        break;
+case "open_move": {
+  const id = card.action?.routineId;
+
+  // Navigate based on which Move flow the card uses
+  if (id === "boost") {
+    nav("/move/boost");
+  } else if (id === "small_wins") {
+    nav("/move/small-wins");
+  } else {
+    // default route
+    nav("/move");
+  }
+  break;
+}
 
       case "none":
       default:
