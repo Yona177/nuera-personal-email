@@ -252,33 +252,3 @@
     color: hsl(var(--wellness-energy));
   }
 }
-/* --- Small Wins micro celebrations --- */
-@keyframes sw-pop {
-  0% { transform: scale(0.95); }
-  60% { transform: scale(1.06); }
-  100% { transform: scale(1.0); }
-}
-@keyframes sw-confetti {
-  0%   { opacity: 0; transform: translateY(-8px); }
-  20%  { opacity: 1; transform: translateY(0); }
-  80%  { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(6px); }
-}
-.sw-pop { animation: sw-pop 240ms ease-out; }
-
-/* Confetti burst (subtle) you can attach to a wrapper via .sw-confetti-on */
-.sw-confetti {
-  pointer-events: none;
-  position: absolute; inset: 0;
-}
-.sw-confetti > span {
-  position: absolute;
-  top: 8px; left: 50%;
-  width: 6px; height: 6px; border-radius: 9999px;
-  background: hsl(210 90% 55%);
-  opacity: 0;
-  animation: sw-confetti 700ms ease-out forwards;
-}
-.sw-confetti > span:nth-child(1) { transform: translate(-50%,0) rotate(-20deg); margin-left:-40px; background:hsl(270 80% 60%); }
-.sw-confetti > span:nth-child(2) { transform: translate(-50%,0) rotate(10deg);  margin-left:  0px; background:hsl(160 80% 50%); }
-.sw-confetti > span:nth-child(3) { transform: translate(-50%,0) rotate(35deg);  margin-left:  40px; background:hsl(35  90% 55%); }
