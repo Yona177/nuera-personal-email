@@ -17,6 +17,7 @@ import GratitudeNew from "@/screens/gratitude/GratitudeNew";
 import GratitudeHistory from "@/screens/gratitude/GratitudeHistory";
 import CompanionChat from "@/screens/companion/CompanionChat";
 import SmallWins from "@/screens/move/SmallWins";
+import MoveBoost from "@/screens/move/MoveBoost";
 
 // new imports oct 4th 25
 import { hasConsent } from "@/utils/consent";
@@ -77,6 +78,7 @@ const AppContent = () => {
         <Route path="/gratitude/history" element={<GratitudeHistory />} />
         <Route path="/mood-check" element={<MoodCheckIn onComplete={handleMoodComplete} />} />
         <Route path="/move" element={<SmallWins />} />
+        <Route path="/move/boost" element={<MoveBoost />} />
 
         {/* Meditation routes */}
         <Route path="/meditation/:meditationId" element={<MeditationPlayer />} />
