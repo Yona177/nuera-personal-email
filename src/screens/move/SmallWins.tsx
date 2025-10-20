@@ -1,72 +1,71 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { track } from "@/utils/analytics";
 import { ArrowLeft } from "lucide-react";
 
 /**
- * GROUPS / CHECKLIST
- * You can tweak labels freely; ids must be unique across groups.
- * Items with `opensScreen: true` show a short guidance screen,
- * then return and mark as completed.
+ * Groups with emojis. ids must be unique across all groups.
+ * opensScreen=true => shows a short guidance screen, then returns & marks done.
  */
 const GROUPS = [
   {
     title: "Quick lifts",
     items: [
-      { id: "walk", label: "Take a short walk", opensScreen: true },
-      { id: "stretch", label: "Stretch for 2 minutes", opensScreen: true },
-      { id: "friend", label: "Call or text a friend", opensScreen: true },
-      { id: "air", label: "Step outside for fresh air", opensScreen: true },
-      { id: "song", label: "Play your favorite song", opensScreen: true },
-      { id: "gratitude", label: "Write one thing you’re grateful for", opensScreen: true },
-      { id: "hug", label: "Pet an animal or hug someone", opensScreen: true }
+      { id: "walk",      emoji: "🚶", label: "Take a short walk",                 opensScreen: true },
+      { id: "stretch",   emoji: "🧘", label: "Stretch for 2 minutes",              opensScreen: true },
+      { id: "friend",    emoji: "💬", label: "Call or text a friend",              opensScreen: true },
+      { id: "air",       emoji: "🌤️", label: "Step outside for fresh air",        opensScreen: true },
+      { id: "song",      emoji: "🎵", label: "Play your favorite song",            opensScreen: true },
+      { id: "gratitude", emoji: "✍️", label: "Write one thing you’re grateful for",opensScreen: true },
+      { id: "hug",       emoji: "🤗", label: "Pet an animal or hug someone",       opensScreen: true }
     ]
   },
   {
     title: "Reset & tidy",
     items: [
-      { id: "tidy", label: "Tidy up your space", opensScreen: true },
-      { id: "sing", label: "Sing a cheerful song", opensScreen: false },
-      { id: "drink", label: "Make a warm drink", opensScreen: true },
-      { id: "plants", label: "Water your plants", opensScreen: true },
-      { id: "organize", label: "Organize one small thing", opensScreen: true },
-      { id: "quote", label: "Read a positive quote", opensScreen: true },
-      { id: "mirror", label: "Smile in the mirror", opensScreen: false }
+      { id: "tidy",     emoji: "🧽", label: "Tidy up your space",                  opensScreen: true  },
+      { id: "sing",     emoji: "🎙️",label: "Sing a cheerful song",                opensScreen: false },
+      { id: "drink",    emoji: "☕", label: "Make a warm drink",                   opensScreen: true  },
+      { id: "plants",   emoji: "🪴", label: "Water your plants",                   opensScreen: true  },
+      { id: "organize", emoji: "🗂️",label: "Organize one small thing",            opensScreen: true  },
+      { id: "quote",    emoji: "💡", label: "Read a positive quote",               opensScreen: true  },
+      { id: "mirror",   emoji: "🙂", label: "Smile in the mirror",                 opensScreen: false }
     ]
   },
   {
     title: "Slow & ground",
     items: [
-      { id: "breathe", label: "Take three deep breaths", opensScreen: true },
-      { id: "water", label: "Drink a glass of water", opensScreen: false },
-      { id: "window", label: "Look out the window", opensScreen: true },
-      { id: "thankyou", label: "Write a thank-you note", opensScreen: true },
-      { id: "listen", label: "Sit quietly and listen", opensScreen: true },
-      { id: "light", label: "Light a candle or dim lights", opensScreen: false },
-      { id: "shoulder", label: "Do a light shoulder roll", opensScreen: true }
+      { id: "breathe",  emoji: "🌬️",label: "Take three deep breaths",             opensScreen: true  },
+      { id: "water",    emoji: "💧", label: "Drink a glass of water",              opensScreen: false },
+      { id: "window",   emoji: "🪟", label: "Look out the window",                 opensScreen: true  },
+      { id: "thankyou", emoji: "💌", label: "Write a thank-you note",              opensScreen: true  },
+      { id: "listen",   emoji: "👂", label: "Sit quietly and listen",              opensScreen: true  },
+      { id: "light",    emoji: "🕯️",label: "Light a candle or dim lights",        opensScreen: false },
+      { id: "shoulder", emoji: "🤸", label: "Do a light shoulder roll",            opensScreen: true  }
     ]
   }
 ] as const;
 
-/** Short guidance text for the detail screen */
+/** Guidance copy for detail screen */
 const DETAILS: Record<string, string> = {
-  walk:      "Step outside and walk a minute or two. Notice your breath and steps.",
-  stretch:   "Roll shoulders, gentle neck turns. Breathe into any tight spots.",
-  friend:    "Send a simple hello or check-in. Short and sincere is perfect.",
-  air:       "Open a door or window; take a few slow, full breaths.",
+  walk:      "Walk a minute or two. Notice breath and steps.",
+  stretch:   "Roll shoulders, gentle neck turns; breathe into tight spots.",
+  friend:    "Send a simple hello or check-in. Short & sincere is perfect.",
+  air:       "Open a door/window. Take a few slow, full breaths.",
   song:      "Play one uplifting track. Let your body sway a little.",
   gratitude: "Write one good thing from today and why it mattered.",
-  hug:       "If possible, hug a loved one or pet. A few seconds is enough.",
+  hug:       "If possible, hug a loved one or pet for a few seconds.",
   tidy:      "Clear one small surface. Enjoy the quick before/after.",
-  drink:     "Make a warm tea or coffee. Savor slow sips.",
-  plants:    "Water your plants and notice new leaves or growth.",
+  drink:     "Make a warm tea/coffee. Savor slow sips.",
+  plants:    "Water your plants; notice new leaves or growth.",
   organize:  "Pick one tiny task (drawer, email) and complete it.",
   quote:     "“No rain, no flowers.” Sit with it for a few breaths.",
   breathe:   "Inhale 4, hold 2, exhale 6. Repeat three times.",
   window:    "Look out and notice three things you can see.",
   thankyou:  "Write a short thank-you to someone specific.",
   listen:    "Close your eyes. Notice far, mid, and near sounds.",
-  shoulder:  "Lift, roll back and down, twice. Relax your jaw."
+  light:     "Soften lighting; let the space feel calm.",
+  shoulder:  "Lift, roll back and down twice. Relax your jaw."
 };
 
 export default function SmallWins() {
@@ -76,7 +75,6 @@ export default function SmallWins() {
 
   const currentGroup = GROUPS[groupIndex];
 
-  // For marking completed after we return from detail screen
   const markCompleted = (id: string) => {
     setCompleted(prev => ({ ...prev, [id]: true }));
     track("smallwins_completed", { id });
@@ -84,33 +82,41 @@ export default function SmallWins() {
 
   const handlePick = (id: string, opensScreen: boolean) => {
     track("smallwins_select", { id });
-    if (opensScreen) {
-      setSelectedId(id);
-    } else {
-      // Immediate completion (strikethrough)
-      markCompleted(id);
-    }
+    if (opensScreen) setSelectedId(id);
+    else markCompleted(id);
   };
 
-  // DETAIL SCREEN
+  // Detail screen
   if (selectedId) {
-    const label =
-      GROUPS.flatMap(g => g.items).find(i => i.id === selectedId)?.label || "Action";
+    const item =
+      GROUPS.flatMap(g => g.items).find(i => i.id === selectedId) || {
+        emoji: "✨",
+        label: "Action"
+      };
     const text = DETAILS[selectedId] || "Give this a gentle try.";
+
     return (
       <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-pink-50">
         <div className="mx-auto max-w-md p-6 pt-16 relative">
-          {/* Back button (same style both screens) */}
+          {/* Back button (consistent) */}
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setSelectedId(null)}
             className="absolute left-4 top-4 h-10 w-10 rounded-full p-0"
+            aria-label="Back"
           >
             <ArrowLeft size={20} />
           </Button>
 
-          <h1 className="text-2xl font-semibold mb-3">{label}</h1>
+          {/* Emoji badge + title */}
+          <div className="mb-4 flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full border bg-white/80 flex items-center justify-center text-xl">
+              {item.emoji}
+            </div>
+            <h1 className="text-2xl font-semibold">{item.label}</h1>
+          </div>
+
           <p className="text-muted-foreground mb-8">{text}</p>
 
           <div className="flex gap-3">
@@ -132,11 +138,11 @@ export default function SmallWins() {
     );
   }
 
-  // CHECKLIST SCREEN
+  // Checklist screen
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-pink-50">
       <div className="mx-auto max-w-md p-6 pt-16 relative">
-        {/* Back button (same style as detail screen) */}
+        {/* Back button (same style) */}
         <Button
           variant="ghost"
           size="sm"
@@ -152,12 +158,10 @@ export default function SmallWins() {
           Tiny actions that make a big lift.
         </p>
 
-        {/* Group title */}
         <div className="mb-4 text-sm font-medium text-muted-foreground">
           {currentGroup.title}
         </div>
 
-        {/* Checklist */}
         <div className="space-y-3">
           {currentGroup.items.map(item => {
             const isDone = !!completed[item.id];
@@ -168,6 +172,12 @@ export default function SmallWins() {
                   isDone ? "opacity-60" : ""
                 }`}
               >
+                {/* Emoji badge */}
+                <div className="h-9 w-9 rounded-full border bg-white flex items-center justify-center text-lg">
+                  {item.emoji}
+                </div>
+
+                {/* Checkbox + label */}
                 <input
                   type="checkbox"
                   className="h-5 w-5"
@@ -176,17 +186,15 @@ export default function SmallWins() {
                     if (isDone) {
                       setCompleted(prev => ({ ...prev, [item.id]: false }));
                     } else {
-                      if (item.opensScreen) {
-                        handlePick(item.id, true);
-                      } else {
-                        handlePick(item.id, false);
-                      }
+                      handlePick(item.id, item.opensScreen);
                     }
                   }}
                 />
                 <span className={`text-sm ${isDone ? "line-through" : ""}`}>
                   {item.label}
                 </span>
+
+                {/* Open button for secondary screen */}
                 {!isDone && item.opensScreen && (
                   <Button
                     variant="ghost"
@@ -202,7 +210,6 @@ export default function SmallWins() {
           })}
         </div>
 
-        {/* None of these → cycle groups */}
         <div className="mt-6">
           <Button
             variant="secondary"
