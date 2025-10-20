@@ -18,6 +18,19 @@ import companionCard from '@/assets/companion-abstract.svg';
 
 export const SEED_CARDS: Card[] = [
     {
+  id: "card_move_boost",
+  type: "cbt",
+  title: "Move Your Body",
+  subtitle: "Fast, guided energizers",
+  content: "Pick a quick, guided move with a timer and cues.",
+  imageUrl: journalCard, // or add a better motion-themed asset later
+  image: journalCard,
+  durationSec: 120,
+  duration: "1–2 min",
+  tags: ["movement", "activation", "energy"],
+  action: { kind: "open_move", routineId: "boost" }
+},
+    {
     id: "card_smallwins",
     type: "cbt", // “behavioral activation” fits under CBT for now
     title: "Small Wins",
