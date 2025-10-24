@@ -67,7 +67,7 @@ const MoodCheckIn = ({ onComplete }: MoodCheckInProps) => {
             How do you feel?
           </h1>
           <p className="text-muted-foreground">
-            Pick a few or tell us.
+            Share what you really feel
           </p>
         </div>
 
